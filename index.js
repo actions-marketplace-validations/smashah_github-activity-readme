@@ -7,6 +7,8 @@ const { Toolkit } = require("actions-toolkit");
 // Get config
 const GH_USERNAME = core.getInput("GH_USERNAME");
 const COMMIT_MSG = core.getInput("COMMIT_MSG");
+const COMMIT_EMAIL = core.getInput("COMMIT_EMAIL");
+const COMMIT_AUTHOR = core.getInput("COMMIT_AUTHOR");
 const MAX_LINES = core.getInput("MAX_LINES");
 /**
  * Returns the sentence case representation
@@ -72,11 +74,11 @@ const commitFile = async () => {
     "config",
     "--global",
     "user.email",
-    "41898282+github-actions[bot]@users.noreply.github.com",
+    COMMIT_EMAIL || "41898282+github-actions[bot]@users.noreply.github.com",
   ]);
   await exec("git", ["config", "--global", "user.name", "readme-bot"]);
   await exec("git", ["add", "README.md"]);
-  await exec("git", ["commit", "-m", COMMIT_MSG]);
+  await exec("git", ["commit", "-m", COMMIT_MSG, "--author", COMMIT_AUTHOR || "gh-actions <actions@github.com>"]);
   await exec("git", ["push"]);
 };
 
